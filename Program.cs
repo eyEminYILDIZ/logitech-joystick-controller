@@ -91,18 +91,12 @@ else
     var flightState = new FlightState();
     flightState.Calibrate(reader.State);
     var renderer = new ConsoleRenderer();
-    var sw = System.Diagnostics.Stopwatch.StartNew();
-    double last = 0;
 
     try
     {
         while (running)
         {
-            double now = sw.Elapsed.TotalSeconds;
-            double dt = Math.Clamp(now - last, 0.001, 0.5);
-            last = now;
-
-            flightState.Update(reader.State, dt);
+            flightState.Update(reader.State);
             renderer.Render(flightState, devicePath, reader.IsConnected);
 
             if (!reader.IsConnected)

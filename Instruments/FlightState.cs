@@ -27,14 +27,15 @@ class FlightState
     private const short Deadzone = 1600; // out of +/-32767, absorbs resting jitter after centering
     private const double MaxDeflectionDeg = 45.0;
 
-    private short _rollCenter, _pitchCenter, _yawCenter;
+    private readonly AxisCalibration _rollCal = new();
+    private readonly AxisCalibration _pitchCal = new();
+    private readonly AxisCalibration _yawCal = new();
     private bool _calibrated;
 
     public double PitchDeg { get; private set; }
     public double RollDeg { get; private set; }
     public double YawDeg { get; private set; }
     public double ThrottlePct { get; private set; }
-    public double AltitudeFt { get; private set; } = 1000;
     public string Hat { get; private set; } = "CENTER";
     public bool[] Buttons { get; private set; } = [];
 
@@ -42,54 +43,36 @@ class FlightState
     public void Calibrate(JoystickState joystick)
     {
         var (axes, _) = joystick.Snapshot();
-        _rollCenter = GetAxis(axes, AxisMap.Roll);
-        _pitchCenter = GetAxis(axes, AxisMap.Pitch);
-        _yawCenter = GetAxis(axes, AxisMap.Yaw);
+        _rollCal.SetCenter(GetAxis(axes, AxisMap.Roll));
+        _pitchCal.SetCenter(GetAxis(axes, AxisMap.Pitch));
+        _yawCal.SetCenter(GetAxis(axes, AxisMap.Yaw));
         _calibrated = true;
     }
 
-    private static double Normalize(short raw, short center)
-    {
-        int deflection = raw - center;
-        if (Math.Abs(deflection) < Deadzone) return 0;
-        return Math.Clamp(deflection / 32767.0, -1.0, 1.0);
-    }
-
-    public void Update(JoystickState joystick, double dtSeconds)
+    public void Update(JoystickState joystick)
     {
         var (axes, buttons) = joystick.Snapshot();
         Buttons = buttons;
         if (!_calibrated) Calibrate(joystick);
 
-        double roll = Normalize(GetAxis(axes, AxisMap.Roll), _rollCenter);
-        double pitch = Normalize(GetAxis(axes, AxisMap.Pitch), _pitchCenter);
-        double yaw = Normalize(GetAxis(axes, AxisMap.Yaw), _yawCenter);
+        double roll = _rollCal.Normalize(GetAxis(axes, AxisMap.Roll), Deadzone);
+        double pitch = _pitchCal.Normalize(GetAxis(axes, AxisMap.Pitch), Deadzone);
+        double yaw = _yawCal.Normalize(GetAxis(axes, AxisMap.Yaw), Deadzone);
         double throttleRaw = GetAxis(axes, AxisMap.Throttle);
 
         RollDeg = roll * MaxDeflectionDeg;
-        PitchDeg = -pitch * MaxDeflectionDeg; // stick forward (positive raw) noses down
+        PitchDeg = pitch * MaxDeflectionDeg; // reversed: stick forward (positive raw) noses up
 
-        // Twist axis is treated as a yaw rate, not an absolute angle.
-        YawDeg = Normalize360(YawDeg + yaw * 90.0 * dtSeconds);
+        // Direct deflection, like pitch/roll: snaps back toward 0 as soon as the twist is centered.
+        YawDeg = yaw * MaxDeflectionDeg;
 
-        // Slider typically rests full-negative when idle on this stick; remap to 0-100%.
-        ThrottlePct = Math.Clamp((throttleRaw + 32767.0) / 65534.0 * 100.0, 0, 100);
-
-        // Toy altitude model: climbs/descends based on throttle above/below a 50% hover point.
-        AltitudeFt += (ThrottlePct - 50.0) * 2.0 * dtSeconds;
-        if (AltitudeFt < 0) AltitudeFt = 0;
+        // Reversed: slider's raw-negative end (was 0%) now maps to 100%, and vice versa.
+        ThrottlePct = Math.Clamp((32767.0 - throttleRaw) / 65534.0 * 100.0, 0, 100);
 
         Hat = DescribeHat(GetAxis(axes, AxisMap.HatX), GetAxis(axes, AxisMap.HatY));
     }
 
     private static short GetAxis(short[] axes, int index) => index < axes.Length ? axes[index] : (short)0;
-
-    private static double Normalize360(double deg)
-    {
-        deg %= 360;
-        if (deg < 0) deg += 360;
-        return deg;
-    }
 
     private static string DescribeHat(short x, short y)
     {

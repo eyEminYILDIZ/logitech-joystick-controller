@@ -23,9 +23,8 @@ class ConsoleRenderer
         WriteLinePadded("");
         WriteLinePadded($"Pitch:    {FormatSigned(state.PitchDeg)} deg");
         WriteLinePadded($"Roll:     {FormatSigned(state.RollDeg)} deg");
-        WriteLinePadded($"Yaw:      {state.YawDeg,5:000.0} deg");
+        WriteLinePadded($"Yaw:      {FormatSigned(state.YawDeg)} deg");
         WriteLinePadded($"Throttle: {state.ThrottlePct,5:00}%");
-        WriteLinePadded($"Altitude: {state.AltitudeFt,7:0} ft");
         WriteLinePadded($"Hat:      {state.Hat}");
         WriteLinePadded("");
         WriteLinePadded(FormatButtons(state.Buttons));
