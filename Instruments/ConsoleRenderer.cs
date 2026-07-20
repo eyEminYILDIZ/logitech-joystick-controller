@@ -1,4 +1,4 @@
-namespace FlightGame.Instruments;
+namespace OpenCms.Libraries.InputController.JoySticks.LogitechExtreme3dPro.Instruments;
 
 /// <summary>Redraws flight instrument gauges in place (no scrolling/flicker).</summary>
 class ConsoleRenderer
@@ -9,7 +9,7 @@ class ConsoleRenderer
 
     private bool _initialized;
 
-    public void Render(FlightState state, string devicePath, bool connected)
+    public void Render(ControllerState state, string devicePath, bool connected)
     {
         if (!_initialized)
         {

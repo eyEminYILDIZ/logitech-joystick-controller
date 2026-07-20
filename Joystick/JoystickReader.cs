@@ -1,4 +1,4 @@
-namespace FlightGame.Joystick;
+namespace OpenCms.Libraries.InputController.JoySticks.LogitechExtreme3dPro.Joystick;
 
 /// <summary>
 /// Reads the Linux joydev binary protocol (struct js_event, 8 bytes per event:

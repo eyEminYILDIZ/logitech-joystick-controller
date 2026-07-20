@@ -1,5 +1,5 @@
-using FlightGame.Instruments;
-using FlightGame.Joystick;
+using OpenCms.Libraries.InputController.JoySticks.LogitechExtreme3dPro.Instruments;
+using OpenCms.Libraries.InputController.JoySticks.LogitechExtreme3dPro.Joystick;
 
 string? devicePath = null;
 bool rawMode = false;
@@ -88,7 +88,7 @@ else
 {
     Console.WriteLine("Calibrating... keep the stick centered and let go of the twist axis.");
     Thread.Sleep(300); // let the kernel's initial-state event replay settle
-    var flightState = new FlightState();
+    var flightState = new ControllerState();
     flightState.Calibrate(reader.State);
     var renderer = new ConsoleRenderer();
 

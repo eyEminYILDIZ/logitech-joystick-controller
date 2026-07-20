@@ -1,4 +1,4 @@
-namespace FlightGame.Instruments;
+namespace OpenCms.Libraries.InputController.JoySticks.LogitechExtreme3dPro.Instruments;
 
 /// <summary>
 /// Per-axis center + auto-expanding min/max, so a self-centering stick axis maps to a

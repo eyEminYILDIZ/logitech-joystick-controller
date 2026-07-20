@@ -1,4 +1,4 @@
-namespace FlightGame.Joystick;
+namespace OpenCms.Libraries.InputController.JoySticks.LogitechExtreme3dPro.Joystick;
 
 /// <summary>Thread-safe latest snapshot of a joystick's axes and buttons.</summary>
 class JoystickState
