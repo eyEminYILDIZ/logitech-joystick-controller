@@ -1,4 +1,4 @@
-# LogitechJoystickController
+# Logitech Joystick Controller
 
 A .NET console app that reads a Logitech Extreme 3D Pro joystick on Linux (via the kernel's `joydev` interface, `/dev/input/jsN`) and renders live flight-instrument readings — pitch, roll, yaw, throttle, hat position, and button states — directly in the terminal.
 
