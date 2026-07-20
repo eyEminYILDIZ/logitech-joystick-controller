@@ -1,4 +1,4 @@
-namespace OpenCms.Libraries.InputController.JoySticks.LogitechExtreme3dPro.Instruments;
+namespace LogitechJoystickController.Instruments;
 
 /// <summary>Redraws flight instrument gauges in place (no scrolling/flicker).</summary>
 class ConsoleRenderer

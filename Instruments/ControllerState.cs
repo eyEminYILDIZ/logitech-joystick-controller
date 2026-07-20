@@ -1,6 +1,6 @@
-namespace OpenCms.Libraries.InputController.JoySticks.LogitechExtreme3dPro.Instruments;
+namespace LogitechJoystickController.Instruments;
 
-using OpenCms.Libraries.InputController.JoySticks.LogitechExtreme3dPro.Joystick;
+using LogitechJoystickController.Joystick;
 
 /// <summary>
 /// Axis/button layout for a Logitech Extreme 3D Pro (USB 046d:c215) under Linux's joydev

@@ -1,4 +1,4 @@
-namespace OpenCms.Libraries.InputController.JoySticks.LogitechExtreme3dPro.Instruments;
+namespace LogitechJoystickController.Instruments;
 
 /// <summary>
 /// Per-axis center + auto-expanding min/max, so a self-centering stick axis maps to a
